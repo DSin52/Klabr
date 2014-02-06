@@ -28,13 +28,16 @@ $(document).ready(function(){
 
 	$("#createAccountButton").click(function(event) {
 		
+		var firstName = $("#createFirstName").val();
+		var lastName = $("#createLastName").val();
+
 		var email = $("#createEmailAddress").val();
 		var verifyEmail = $("#verifyEmailAddress").val();
 
 		var pass = $("#createPassword").val();
 		var verifyPass = $("#verifyPassword").val();
 
-		if (!email || !verifyEmail || !pass || !verifyPass) {
+		if (!email || !verifyEmail || !pass || !verifyPass || !firstName || !lastName) {
 			alert("Please complete entering in all the information");
 		} else if (email !== verifyEmail) {
 			alert("The two emails do not match up!");
@@ -47,7 +50,7 @@ $(document).ready(function(){
 				if (data.exists === true) {
 					alert("Email already exists!");
 				} else {
-					$.post("/create", {"Email": email, "Password": pass}, function (statusCode) {
+					$.post("/create", {"First_Name": firstName, "Last_Name": lastName, "Email": email, "Password": pass}, function (statusCode) {
 						alert("Account Created!");
 						$("#createModal").modal("toggle");
 					});

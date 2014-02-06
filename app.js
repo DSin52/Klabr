@@ -47,8 +47,8 @@ passport.use(new LocalStrategy({
 	"usernameField": "Email",
 	"passwordField": "Password"
 },
-  function(username, password, done) {
-    db.find({ "Email": username, "Password": password }, function (err, user, info) {
+  function(email, password, done) {
+    db.find({ "Email": email, "Password": password }, function (err, user, info) {
     	if (user) {
 	      user.id = user._id;
 	      done(err, user, "Succesfully Authenticated!");
@@ -100,6 +100,7 @@ app.post("/main", function(req, res, next) {
     	return next(err);
     }
     if (!user) { 
+    	console.log(info);
     	return res.redirect("/");
     }
     req.logIn(user, function(err) {
@@ -107,24 +108,32 @@ app.post("/main", function(req, res, next) {
       	return next(err); 
       }
       var minute = 500000;
-      res.cookie("loggedIn", {"Email": user.Email}, {"maxAge": minute});
-      return router.route(req, res, "main", {"Email": user.Email});
+      res.cookie("loggedIn", {"Email": user.Email, "First_Name": user.First_Name, "Last_Name": user.Last_Name}, {"maxAge": minute});
+      return router.route(req, res, "main", 
+      	{
+      		"Email": user.Email, 
+      	 	"First_Name": user.First_Name, 
+      	 	"Last_Name": user.Last_Name
+      	});
     });
   })(req, res, next);
 });
 
 app.get("/main", function (req, res) {
 	if (req.cookies.loggedIn) {
-		return router.route(req, res, "main", {"Email": req.cookies.loggedIn.Email});
+		router.route(req, res, "main", {"Email": req.cookies.loggedIn.Email, "First_Name": req.cookies.loggedIn.First_Name, "Last_Name": req.cookies.Last_Name});
 	} else {
 		return res.redirect("/");
 	}
+	console.log("Query is: " + req.query.search);
 });
 
 app.post("/create", function (req, res) {
 	var User = {
-		Email: req.body.Email,
-		Password: req.body.Password
+		"First_Name": req.body.First_Name,
+		"Last_Name": req.body.Last_Name,
+		"Email": req.body.Email,
+		"Password": req.body.Password
 	};
 
 	db.insertIntoDB(User, function(err) {

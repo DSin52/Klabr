@@ -52,12 +52,8 @@ function insertIntoDB(account, done) {
 			bcrypt.hash(account.Password, salt, callback);
 		},
 		function (hashedPassword, callback) {
-			var userAccount = {
-				"Email": account.Email,
-				"Username": account.Username,
-				"Password": hashedPassword
-			};
-			mongoDB.insert(userAccount, callback);
+			account.Password = hashedPassword;
+			mongoDB.insert(account, callback);
 		}
 		],
 		function (err, results) {
@@ -91,6 +87,7 @@ function find(query, callback) {
 			mongoDB.findOne({"Email": query.Email}, next);
 		},
 		function (account, next) {
+			console.log(account);
 			bcrypt.compare(query.Password, account.Password, function (err, res) {
 				next(err, account, res);
 			});
