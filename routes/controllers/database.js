@@ -102,22 +102,13 @@ function find(query, callback) {
 }
 
 function search(query, callback) {
-	if (query.length == 0) {
-		callback(null);
-	} else {
-		var userQuery = {
-			"First_Name": query[0],
-			"Last_Name": query[1]
-		};
-		console.log(userQuery.First_Name + userQuery.Last_Name);
-		var projection = {
-			"First_Name": true,
-			"Last_Name": true,
-			"Email": true,
-			"_id": false
-			};		
-		mongoDB.find(userQuery, projection).toArray(callback);
-	}
+	var projection = {
+		"First_Name": true,
+		"Last_Name": true,
+		"Email": true,
+		"_id": false
+		};		
+	mongoDB.find(query, projection).toArray(callback);
 }
 
 module.exports.connectToDB = connectToDB;

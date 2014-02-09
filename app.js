@@ -8,8 +8,10 @@ var router = require("./routes/router.js");
 var db = require("./routes/controllers/database.js");
 var passport = require("passport");
 var LocalStrategy = require('passport-local').Strategy;
+var sanitizer = require("./routes/controllers/sanitizer.js");
 var crypto = require("crypto");
 var fs = require("fs");
+var async = require("async");
 var app = express();
 
 //put in for future https support
@@ -91,7 +93,6 @@ app.use("/search", function (req, res, next) {
 	});
 });
 
-
 // development only
 if ("development" == app.get("env")) {
   app.use(express.errorHandler());
@@ -132,7 +133,7 @@ app.post("/main", function(req, res, next) {
 
 app.get("/main", function (req, res) {
 	if (req.cookies.loggedIn) {
-		router.route(req, res, "main", {"Email": req.cookies.loggedIn.Email, "First_Name": req.cookies.loggedIn.First_Name, "Last_Name": req.cookies.Last_Name});
+		router.route(req, res, "main", {"Email": req.cookies.loggedIn.Email, "First_Name": req.cookies.loggedIn.First_Name, "Last_Name": req.cookies.loggedIn.Last_Name});
 	} else {
 		return res.redirect("/");
 	}
@@ -173,14 +174,14 @@ app.post("/logout", function (req, res) {
 });
 
 app.get("/search", function (req, res) {
-	var cleanTerm = req.query.term.split(" ");
-	db.search(cleanTerm, function (err, docs) {
-		if (err) {
-			res.send(500, {Error: "Couldn't fetch user!"});
-			return;
-		} 
-		console.log(docs.length);
-		res.json(200, docs);
+	sanitizer.sanitizeText(req.query.term, function (query){
+		db.search(query, function (err, docs) {
+			if (err) {
+				console.log(err);
+				return;
+			} 
+			res.json(200, docs);
+		});
 	});
 });
 
