@@ -185,6 +185,10 @@ app.get("/search", function (req, res) {
 	});
 });
 
+app.get("/users/:userid", function (req, res) {
+	router.route(req, res, "user");
+});
+
 //starts the server
 app.listen(app.get("port"), function() {
 	console.log("Server is listening on port: " + app.get("port"));
