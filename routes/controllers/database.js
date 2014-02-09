@@ -87,7 +87,6 @@ function find(query, callback) {
 			mongoDB.findOne({"Email": query.Email}, next);
 		},
 		function (account, next) {
-			console.log(account);
 			bcrypt.compare(query.Password, account.Password, function (err, res) {
 				next(err, account, res);
 			});
@@ -102,7 +101,27 @@ function find(query, callback) {
 		});
 }
 
+function search(query, callback) {
+	if (query.length == 0) {
+		callback(null);
+	} else {
+		var userQuery = {
+			"First_Name": query[0],
+			"Last_Name": query[1]
+		};
+		console.log(userQuery.First_Name + userQuery.Last_Name);
+		var projection = {
+			"First_Name": true,
+			"Last_Name": true,
+			"Email": true,
+			"_id": false
+			};		
+		mongoDB.find(userQuery, projection).toArray(callback);
+	}
+}
+
 module.exports.connectToDB = connectToDB;
 module.exports.insertIntoDB = insertIntoDB;
 module.exports.checkExists = checkExists;
 module.exports.find = find;
+module.exports.search = search;

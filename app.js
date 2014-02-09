@@ -80,6 +80,17 @@ app.use("/create", function (req, res, next) {
 	});
 });
 
+app.use("/search", function (req, res, next) {
+	db.connectToDB(function (error, database) {
+		if (error) {
+			next(error);
+		}
+		else {
+			next();
+		}
+	});
+});
+
 
 // development only
 if ("development" == app.get("env")) {
@@ -125,7 +136,6 @@ app.get("/main", function (req, res) {
 	} else {
 		return res.redirect("/");
 	}
-	console.log("Query is: " + req.query.search);
 });
 
 app.post("/create", function (req, res) {
@@ -160,6 +170,18 @@ app.post("/logout", function (req, res) {
 	req.logOut();
 	res.clearCookie("loggedIn");
 	res.redirect("/");
+});
+
+app.get("/search", function (req, res) {
+	var cleanTerm = req.query.term.split(" ");
+	db.search(cleanTerm, function (err, docs) {
+		if (err) {
+			res.send(500, {Error: "Couldn't fetch user!"});
+			return;
+		} 
+		console.log(docs.length);
+		res.json(200, docs);
+	});
 });
 
 //starts the server
