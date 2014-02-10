@@ -177,7 +177,7 @@ app.get("/search", function (req, res) {
 	sanitizer.sanitizeText(req.query.term, function (query){
 		db.search(query, function (err, docs) {
 			if (err) {
-				console.log(err);
+                res.send(500, {Error: "Something went wrong sanitizing text!"});
 				return;
 			} 
 			res.json(200, docs);
@@ -186,7 +186,8 @@ app.get("/search", function (req, res) {
 });
 
 app.get("/users/:userid", function (req, res) {
-	router.route(req, res, "user");
+
+	router.route(req, res, "user", req.param("userid"));
 });
 
 //starts the server
