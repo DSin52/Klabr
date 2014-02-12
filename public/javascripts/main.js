@@ -5,10 +5,10 @@ $(document).ready(function(event) {
 	});
 
   $( "#searchbar" ).autocomplete({
-        minLength: 2,
-        source: "http://localhost:3000/search",
+        minLength: 1,
+        source: "/search",
         select: function (event, ui) {
-          window.location.href="http://localhost:3000/users/" + ui.item.First_Name + ui.item.Last_Name;
+          window.location.href="/users/" + ui.item.First_Name + ui.item.Last_Name;
         },
         response: function (event, ui) {
           //sweet hack :)
@@ -20,7 +20,7 @@ $(document).ready(function(event) {
       .data( "ui-autocomplete" )._renderItem = function( ul, item ) {
           if (item) {
             return $( "<li>" )
-              .append( "<a>" + item.First_Name + " " + item.Last_Name + " " + item.Email + "</a>" )
+              .append( "<a>Name: " + item.First_Name + " " + item.Last_Name + ",Email: " + item.Email + "</a>" )
               .appendTo( ul );
             } else {
               return $( "<li>" )
