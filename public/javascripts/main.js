@@ -20,7 +20,7 @@ $(document).ready(function(event) {
       .data( "ui-autocomplete" )._renderItem = function( ul, item ) {
           if (item) {
             return $( "<li>" )
-              .append( "<a>Name: " + item.First_Name + " " + item.Last_Name + ",Email: " + item.Email + "</a>" )
+              .append( "<a>" + item.First_Name + " " + item.Last_Name + ", Email: " + item.Email + "</a>" )
               .appendTo( ul );
             } else {
               return $( "<li>" )

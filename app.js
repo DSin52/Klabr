@@ -139,6 +139,10 @@ app.get("/main", function (req, res) {
 	}
 });
 
+app.get("/create", function (req, res) {
+	res.redirect("/");
+});
+
 app.post("/create", function (req, res) {
 	var User = {
 		"First_Name": req.body.First_Name,
@@ -173,6 +177,10 @@ app.post("/logout", function (req, res) {
 	res.redirect("/");
 });
 
+app.get("/logout", function (req, res) {
+	res.redirect("/");
+});
+
 app.get("/search", function (req, res) {
 	sanitizer.sanitizeText(req.query.term, function (query){
 		db.search(query, function (err, docs) {
@@ -186,7 +194,6 @@ app.get("/search", function (req, res) {
 });
 
 app.get("/users/:userid", function (req, res) {
-
 	router.route(req, res, "user", req.param("userid"));
 });
 

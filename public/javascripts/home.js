@@ -4,6 +4,15 @@ $(document).ready(function(){
 		$.post("/validation", acct, callback);
 	};
 
+	function clearInputs() {
+		$("#createFirstName").val("");
+		$("#createLastName").val("");
+		$("#createEmailAddress").val("");
+		$("#verifyEmailAddress").val("");
+		$("#createPassword").val("");
+		$("#verifyPassword").val("");
+	}
+
 	$("#loginButton").click(function(event) {
 
 		var username = $("#user").val();
@@ -53,10 +62,15 @@ $(document).ready(function(){
 					$.post("/create", {"First_Name": firstName, "Last_Name": lastName, "Email": email, "Password": pass}, function (statusCode) {
 						alert("Account Created!");
 						$("#createModal").modal("toggle");
+						clearInputs();
 					});
 				}
 			});
 		}
+	});
+
+	$("#cancel").click(function (event) {
+		clearInputs();
 	});
 
 	$("#forgotEmail").click(function(event) {
