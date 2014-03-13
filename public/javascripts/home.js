@@ -4,13 +4,19 @@ $(document).ready(function(){
 		$.post("/validation", acct, callback);
 	};
 
+	function validateAccount(acct, callback) {
+		validate({"Email": acct.Email}, callback);
+	};
+
 	function clearInputs() {
 		$("#createFirstName").val("");
 		$("#createLastName").val("");
 		$("#createEmailAddress").val("");
+		$("#createUsername").val("");
 		$("#verifyEmailAddress").val("");
 		$("#createPassword").val("");
 		$("#verifyPassword").val("");
+		$("#createPicture").val("");
 	}
 
 	$("#loginButton").click(function(event) {
@@ -25,7 +31,7 @@ $(document).ready(function(){
 		}
 
 		event.preventDefault();
-		validate({"Email": username, "Password": password}, function (data) {
+		validateAccount({"Email": username, "Password": password}, function (data) {
 			if (data.exists === false) {
 				alert("Account not recognized!");
 				return;
@@ -42,11 +48,11 @@ $(document).ready(function(){
 
 		var email = $("#createEmailAddress").val();
 		var verifyEmail = $("#verifyEmailAddress").val();
-
+		var username = $("#createUsername").val();
 		var pass = $("#createPassword").val();
 		var verifyPass = $("#verifyPassword").val();
 
-		if (!email || !verifyEmail || !pass || !verifyPass || !firstName || !lastName) {
+		if (!email || !verifyEmail || !pass || !verifyPass || !firstName || !lastName || !username) {
 			alert("Please complete entering in all the information");
 		} else if (email !== verifyEmail) {
 			alert("The two emails do not match up!");
@@ -59,10 +65,18 @@ $(document).ready(function(){
 				if (data.exists === true) {
 					alert("Email already exists!");
 				} else {
-					$.post("/create", {"First_Name": firstName, "Last_Name": lastName, "Email": email, "Password": pass}, function (statusCode) {
-						alert("Account Created!");
-						$("#createModal").modal("toggle");
-						clearInputs();
+					validate({"Username": username}, function (data) {
+						if (data.exists === true) {
+							alert("Username already exists!");
+						} else {
+							// $.post("/create", {"First_Name": firstName, "Last_Name": lastName, "Email": email, "Password": pass, "Username": username}, function (statusCode) {
+							// 	$("#image").submit();
+							// 	alert("Account Created!");
+							// 	$("#createModal").modal("toggle");
+							// 	clearInputs();
+							// });
+							$("#create").submit();
+						}
 					});
 				}
 			});

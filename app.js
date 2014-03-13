@@ -144,12 +144,24 @@ app.get("/create", function (req, res) {
 });
 
 app.post("/create", function (req, res) {
+	console.log("Files: " + JSON.stringify(req.files));
+	console.log(req.body);
 	var User = {
 		"First_Name": req.body.First_Name,
 		"Last_Name": req.body.Last_Name,
 		"Email": req.body.Email,
+		"Username": req.body.Username,
 		"Password": req.body.Password
 	};
+
+	fs.readFile(req.files.picture.path, function (err, data) {
+		if (err) {
+			throw err;
+		} else {
+			User.Profile_Picture = data;
+		}
+	});
+
 
 	db.insertIntoDB(User, function(err) {
 		if (err) {
@@ -158,11 +170,11 @@ app.post("/create", function (req, res) {
 		}
 		router.route(req, res, "home");
 	});
-	res.send(res.statusCode);
+	// res.send(res.statusCode, {});
 });
 
 app.post("/validation", function (req, res) {
-	db.checkExists({"Email": req.body.Email}, function(err, acct) {
+		db.checkExists(req.body, function(err, acct) {
                 if (err) {
                         res.send(500, {Error: "Something went wrong!"});
                         return;

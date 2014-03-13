@@ -8,7 +8,7 @@ $(document).ready(function(event) {
         minLength: 1,
         source: "/search",
         select: function (event, ui) {
-          window.location.href="/users/" + ui.item.First_Name + ui.item.Last_Name;
+          window.location.href="/users/" + ui.item.Username;
         },
         response: function (event, ui) {
           //sweet hack :)
@@ -20,7 +20,7 @@ $(document).ready(function(event) {
       .data( "ui-autocomplete" )._renderItem = function( ul, item ) {
           if (item) {
             return $( "<li>" )
-              .append( "<a>" + item.First_Name + " " + item.Last_Name + ", Email: " + item.Email + "</a>" )
+              .append( "<a>" + item.Username + " " + item.First_Name + " " + item.Last_Name + ", Email: " + item.Email + "</a>" )
               .appendTo( ul );
             } else {
               return $( "<li>" )

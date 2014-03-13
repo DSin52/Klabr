@@ -13,7 +13,7 @@ function connectToDB(callback) {
       return;
     }
 
-    MongoClient.connect("mongodb://127.0.0.1:27017/Klabr", function (err, db) {
+    MongoClient.connect("mongodb://127.0.0.1:27017/KindaRight", function (err, db) {
     	
     	if (err) {
     		throw err;
@@ -106,6 +106,7 @@ function search(query, callback) {
 		"First_Name": true,
 		"Last_Name": true,
 		"Email": true,
+		"Username": true,
 		"_id": false
 		};		
 	mongoDB.find(query, projection).toArray(callback);
